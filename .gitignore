@@ -1,8 +1,9 @@
 # Testing images and meshes
-*.svg
+*.xcf
 *.png
 *.jpg
 *.jpeg
+*.svg
 
 # OSX Thumbnails
 .DS_Store
