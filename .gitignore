@@ -1,0 +1,11 @@
+# Testing images and meshes
+*.svg
+*.png
+*.jpg
+*.jpeg
+
+# OSX Thumbnails
+.DS_Store
+
+# Python compiled files
+__pycache__
