@@ -1,21 +1,16 @@
 import os
 import polygons
 
-stroke = False
 args = polygons.setup_args()
 
 svg, image = args.files
 
-if args.output:
-    output = args.output
-elif args.override:
-    output = svg
-else:
-    output = "- colourized".join(os.path.splitext(svg))
+output = (args.output if args.output
+          else svg if args.override
+          else "- colourized".join(os.path.splitext(svg)))
 
-if args.stroke is None:
-    stroke = True
-elif args.stroke is not False:
-    stroke = args.stroke
+stroke = (True if args.stroke is None
+          else args.stroke if args.stroke is not False
+          else False)
 
 polygons.colour(svg, image, output, stroke=stroke)
