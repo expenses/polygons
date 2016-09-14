@@ -2,10 +2,10 @@ import tqdm
 import xml.etree.ElementTree as ET
 from skimage.draw import polygon
 from skimage.io import imread
-from .tools import perimeter
+from .tools import avg, perimeter
 
 
-def colour(svg_path, image_path, output_path, stroke=False):
+def colour(svg_path, image_path, output_path, stroke=False, scale=1):
     svg = ET.parse(svg_path)
     # Load the image as a 2d numpy array with rgb in a list
     image = imread(image_path)
@@ -22,8 +22,14 @@ def colour(svg_path, image_path, output_path, stroke=False):
 
         # Add the x and y coordinates for each point
         for point in points.split():
-            for index, value in enumerate(point.split(",")):
-                coords[index].append(float(value))
+            for dimension, value in enumerate(point.split(",")):
+                coords[dimension].append(float(value))
+
+        if scale != 1:
+            for dimension in coords:
+                for i, point in enumerate(dimension):
+                    # Change the point by the distance to the center x scale
+                    dimension[i] -= (avg(dimension) - point) * (scale - 1)
 
         # Create a list of pixels from the image using the coords and shape
         pixels = image[polygon(coords[1], coords[0], image.shape)]
@@ -39,8 +45,7 @@ def colour(svg_path, image_path, output_path, stroke=False):
             channels = [int(channel/len(pixels)) for channel in channels]
         else:
             # Find the values of the average (center) pixel of the poly
-            channels = image[int(sum(coords[1])/len(coords[1])),
-                             int(sum(coords[0])/len(coords[0]))]
+            channels = image[int(avg(coords[1])), int(avg(coords[0]))]
 
         # Set the polygon attributes
         poly.attrib = {

@@ -12,6 +12,12 @@ def setup_args():
                         default=False,
                         help="The width of the strokes. Default is 1.")
 
+    parser.add_argument("-f", "--scale-factor", dest="scale", type=float,
+                        default=1,
+                        help="A scale factor for the polygon scan area. \
+                        default is 1. Values > 1 will scan a larger area, \
+                        values < 1 will scan a smaller area.")
+
     parser.add_argument("-o", "--output", dest="output", type=str,
                         help="Specify an output file.")
 

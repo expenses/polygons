@@ -13,4 +13,4 @@ stroke = (True if args.stroke is None
           else args.stroke if args.stroke is not False
           else False)
 
-polygons.colour(svg, image, output, stroke=stroke)
+polygons.colour(svg, image, output, stroke=stroke, scale=args.scale)

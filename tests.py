@@ -14,3 +14,5 @@ polygons.colour(*sources, output.format(test="stroke - perimeter"),
                 stroke="perimeter")
 polygons.colour(*sources, output.format(test="stroke - pixels"),
                 stroke="pixels")
+polygons.colour(*sources, output.format(test="scale - 1.5"), scale=1.5)
+polygons.colour(*sources, output.format(test="scale - 0.5"), scale=-0.5)
