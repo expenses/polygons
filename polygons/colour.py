@@ -5,7 +5,8 @@ from skimage.io import imread
 from .tools import avg, perimeter
 
 
-def colour(svg_path, image_path, output_path, stroke=False, scale=1):
+def colour(svg_path, image_path, output_path, stroke=False, scale=1,
+           resize=False):
     svg = ET.parse(svg_path)
     # Load the image as a 2d numpy array with rgb in a list
     image = imread(image_path)
@@ -46,6 +47,11 @@ def colour(svg_path, image_path, output_path, stroke=False, scale=1):
         else:
             # Find the values of the average (center) pixel of the poly
             channels = image[int(avg(coords[1])), int(avg(coords[0]))]
+
+        if resize:
+            points = ""
+            for point in range(len(coords[0])):
+                points += "%s,%s " % (coords[0][point], coords[1][point])
 
         # Set the polygon attributes
         poly.attrib = {

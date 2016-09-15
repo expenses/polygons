@@ -18,6 +18,10 @@ def setup_args():
                         default is 1. Values > 1 will scan a larger area, \
                         values < 1 will scan a smaller area.")
 
+    parser.add_argument("-r", "--resize", dest="resize", action="store_const",
+                        const=True, default=False, help="Resize the output \
+                        polygons to match the scan area.")
+
     parser.add_argument("-o", "--output", dest="output", type=str,
                         help="Specify an output file.")
 

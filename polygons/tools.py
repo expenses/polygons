@@ -1,8 +1,7 @@
 import math
 
 
-def avg(list):
-    return sum(list)/len(list)
+def avg(list): return sum(list)/len(list)
 
 
 def perimeter(x_ords, y_ords):
