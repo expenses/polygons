@@ -40,4 +40,7 @@ def setup_args():
         parser.error("Resizing the polygons will do nothing if they are not "
                      "scaled.")
 
+    if args.scale < 0:
+        parser.error("Scale cannot be less than 0.")
+
     return parser.parse_args()
