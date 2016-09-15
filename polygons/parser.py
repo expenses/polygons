@@ -39,7 +39,7 @@ def setup_args():
     if len(args.files) > 2 or len(args.files) == 1:
         parser.error("Must input 2 or 0 (for testing) files.")
 
-    if args.resize and not args.scale:
+    if args.resize and args.scale == 1:
         parser.error("Resizing the polygons will do nothing if they are not "
                      "scaled.")
 
