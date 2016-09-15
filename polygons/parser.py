@@ -5,7 +5,7 @@ def setup_args():
     parser = argparse.ArgumentParser(
         description="A cli tool for colouring svg meshes")
 
-    parser.add_argument("files", nargs="*",
+    parser.add_argument("files", nargs=2,
                         help="The input svg and image files.")
 
     parser.add_argument("-s", "--stroke", dest="stroke", type=str, nargs="?",
@@ -35,9 +35,6 @@ def setup_args():
         parser.error(
             "Cannot specify an output file and override the original."
         )
-
-    if len(args.files) > 2 or len(args.files) == 1:
-        parser.error("Must input 2 or 0 (for testing) files.")
 
     if args.resize and args.scale == 1:
         parser.error("Resizing the polygons will do nothing if they are not "
