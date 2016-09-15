@@ -2,7 +2,7 @@ import tqdm
 import xml.etree.ElementTree as ET
 from skimage.draw import polygon
 from skimage.io import imread
-from .tools import avg, perimeter
+from .tools import avg, num, perimeter
 
 
 def colour(svg_path, image_path, output_path, stroke=False, scale=1,
@@ -10,6 +10,13 @@ def colour(svg_path, image_path, output_path, stroke=False, scale=1,
     svg = ET.parse(svg_path)
     # Load the image as a 2d numpy array with rgb in a list
     image = imread(image_path)
+
+    # Check if the image can be turned into an int (1 channel, greyscale) or
+    # does not have 3 channels.
+    if num(image[0, 0]) or len(image[0, 0]) != 3:
+        print("Invalid image. Requires RGB.")
+        exit()
+
     # Create a list of polygons based off element tags (<polygon .. />)
     polygons = [el for el in svg.getroot() if el.tag.endswith("polygon")]
 
@@ -38,9 +45,9 @@ def colour(svg_path, image_path, output_path, stroke=False, scale=1,
         # If the list isn't empty (some polys cover less than 1 pixel)
         if len(pixels):
             # Loop through pixels and add colour values to channel totals
-            for rgb in pixels:
-                for i in range(3):
-                    channels[i] += rgb[i]
+            for pixel in pixels:
+                for channel, value in enumerate(pixel):
+                    channels[channel] += value
 
             # And get the average
             channels = [int(channel/len(pixels)) for channel in channels]

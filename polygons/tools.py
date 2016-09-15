@@ -4,6 +4,14 @@ import math
 def avg(list): return sum(list)/len(list)
 
 
+def num(variable):
+    try:
+        int(variable)
+        return True
+    except:
+        return False
+
+
 def perimeter(x_ords, y_ords):
     perimeter = 0
     for i in range(len(x_ords)):
