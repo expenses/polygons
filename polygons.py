@@ -3,15 +3,13 @@ import polygons
 
 args = polygons.setup_args()
 
-svg, image = args.files
-
 output = (args.output if args.output
-          else svg if args.override
-          else "- colourized".join(os.path.splitext(svg)))
+          else args.svg if args.overwrite
+          else " - colourized".join(os.path.splitext(args.svg)))
 
 stroke = (True if args.stroke is None
           else args.stroke if args.stroke is not False
           else False)
 
-polygons.colour(svg, image, output,
+polygons.colour(args.svg, args.image, output,
                 stroke=stroke, scale=args.scale, resize=args.resize)
