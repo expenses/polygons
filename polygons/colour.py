@@ -1,7 +1,7 @@
 from tqdm import tqdm
 import xml.etree.ElementTree as ET
 from skimage import draw, io
-from numpy import average
+from numpy import average, array
 from math import hypot
 
 
@@ -9,10 +9,10 @@ def intavg(array, dimension=-1):
     return average(array, dimension).astype(int)
 
 
-def perimeter(xords, yords):
+def perimeter(coords):
     perimeter = 0
-    for i in range(len(xords)):
-        perimeter += hypot(xords[i] - xords[i-1], yords[i] - yords[i-1])
+    for i, coord in enumerate(coords):
+        perimeter += hypot(*(coord - coords[i-1]))
     return perimeter
 
 
@@ -33,20 +33,18 @@ def colour(svg_path, image_path, output_path, stroke=False, scale=1,
     for poly in tqdm(polygons, mininterval=0.01):
         # Get out points attribute (points="..")
         points = poly.attrib["points"]
-        # Set up a list of y and x coordinates
-        coords = [[], []]
+        coords = []
 
         # Add the x and y coordinates for each point
         for point in points.split():
-            for dimension, value in enumerate(point.split(",")):
-                coords[dimension].append(float(value))
+            coords.append(point.split(","))
+        coords = array(coords).astype(float)
 
         if scale != 1:
-            for i, dimension in enumerate(coords):
-                coords[i] -= (average(dimension) - dimension) * (scale - 1)
+            coords -= (average(coords, 0) - coords) * (scale - 1)
 
         # Create a list of pixels from the image using the coords and shape
-        pixels = image[draw.polygon(coords[1], coords[0], image.shape)]
+        pixels = image[draw.polygon(coords[:, 1], coords[:, 0], image.shape)]
         # And get out the image channels as a rbg tuple
         channels = tuple(
             intavg(pixels, 0) if len(pixels) else
@@ -56,8 +54,8 @@ def colour(svg_path, image_path, output_path, stroke=False, scale=1,
 
         if resize:
             points = ""
-            for point in range(len(coords[0])):
-                points += "%s,%s " % (coords[0][point], coords[1][point])
+            for point in coords:
+                points += "%s,%s " % tuple(point)
 
         # Set the polygon attributes
         poly.attrib = {
@@ -71,7 +69,7 @@ def colour(svg_path, image_path, output_path, stroke=False, scale=1,
                 "stroke-linejoin": "bevel",
                 "stroke-width": str(
                     # Use the perimeter of the poly / 10
-                    perimeter(*coords) / 10 if stroke == "perimeter"
+                    perimeter(coords) / 10 if stroke == "perimeter"
                     # Use the sqrt of len(pixels) (or 1) / 2
                     else (len(pixels) or 1) ** 0.5 / 2 if stroke == "pixels"
                     # Use the entered stroke value (num expected)
