@@ -35,7 +35,7 @@ def setup_args():
 
     args = parser.parse_args()
 
-    if args.output and args.override:
+    if args.output and args.overwrite:
         parser.error(
             "Cannot specify an output file and override the original."
         )
