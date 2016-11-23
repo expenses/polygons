@@ -1,14 +1,15 @@
 from tqdm import tqdm
 import xml.etree.ElementTree as ET
 from skimage import draw, io
-from numpy import average, array
-from math import hypot
+from numpy import average, array, hypot
 
 
+# Average an array in a certain dimension and return int values
 def intavg(array, dimension=-1):
     return average(array, dimension).astype(int)
 
 
+# Calculate the perimeter for an array of (x, y) coords
 def perimeter(coords):
     perimeter = 0
     for i, coord in enumerate(coords):
@@ -49,9 +50,10 @@ def colour(svg_path, image_path, output_path, stroke=False, scale=1,
         channels = tuple(
             intavg(pixels, 0) if len(pixels) else
             # Get the center pixel instead of average (if poly is too small)
-            image[intavg(coords[1]), intavg(coords[0])]
+            image[intavg(coords[:, 1]), intavg(coords[:, 0])]
         )
 
+        # Rewrite points if they were resized
         if resize:
             points = ""
             for point in coords:
@@ -63,6 +65,7 @@ def colour(svg_path, image_path, output_path, stroke=False, scale=1,
             "stroke" if stroke else "fill": "rgb(%s, %s, %s)" % channels
         }
 
+        # Update the attributes if the polygons are stroked
         if stroke:
             poly.attrib.update({
                 "fill": "none",
