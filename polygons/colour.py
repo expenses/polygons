@@ -49,8 +49,12 @@ def colour(svg_path, image_path, output_path, stroke=False, scale=1,
         # And get out the image channels as a rbg tuple
         channels = tuple(
             intavg(pixels, 0) if len(pixels) else
-            # Get the center pixel instead of average (if poly is too small)
-            image[intavg(coords[:, 1]), intavg(coords[:, 0])]
+            # If the polygon is too small, get the closest pixel to the center
+            # that is inside the image.
+            image[
+                min(intavg(coords[:, 1]), image.shape[0] - 1),
+                min(intavg(coords[:, 0]), image.shape[1] - 1)
+            ]
         )
 
         # Rewrite points if they were resized
